@@ -48,13 +48,18 @@ class TaskURLTests(TestCase):
                 'posts:post_detail', kwargs={'post_id': 1}
             ),
             'posts/create_post.html': reverse(
-                'posts:post_edit', kwargs={'post_id': 1}
-            ),
-            'posts/create_post.html': reverse(
                 'posts:create_post'
             ),
 
         }
+        response = self.authorized_client.get(reverse(
+            'posts:post_edit', kwargs={'post_id': 1})
+        )
+        self.assertTemplateUsed(
+            response,
+            'posts/create_post.html'
+        )
+
         for template, reverse_name in templates_pages_names.items():
             with self.subTest(reverse_name=reverse_name):
                 response = self.authorized_client.get(reverse_name)

@@ -9,7 +9,7 @@
   <h3>Всего постов: {{ author.posts.count }}</h3>
   <hr>
     {% for post in page_obj %}
-      {% include 'posts/includes/article.html' with index=True profile=True %}
+      {% include 'posts/includes/article.html' with index=True show_author_url=True %}
       <br>
       {% empty %}
         p>Нет Постов</p>

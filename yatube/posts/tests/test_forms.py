@@ -66,15 +66,27 @@ class PostCreateFormTests(TestCase):
         # Проверяем, увеличилось ли число постов
         self.assertEqual(Post.objects.count(), tasks_count + 1)
 
+        last_obj = Post.objects.all().last()
+        self.assertEqual(last_obj.text, 'Тестовый текст')
+        self.assertEqual(last_obj.author, self.user)
+        self.assertEqual(last_obj.group, self.group)
+
     def test_post_edit(self):
         """Валидная форма post_edit создает запись в Post."""
-
+        tasks_count = Post.objects.count()
         # Отправляем POST-запрос
         response = self.authorized_client.post(
             reverse('posts:post_edit', args=[1]),
-            data={'text': 'Тестовый текст2'},
+            data={
+                'text': 'Тестовый текст2',
+            }
         )
+
+        self.assertEqual(Post.objects.count(), tasks_count)
         # Проверяем, сработал ли редирект
         self.assertRedirects(response, reverse('posts:post_detail', args=[1]))
 
-        self.assertTrue(Post.objects.filter(text='Тестовый текст2',).exists())
+        last_obj = Post.objects.all().last()
+        self.assertEqual(last_obj.text, 'Тестовый текст2')
+        self.assertEqual(last_obj.author, self.user)
+        self.assertEqual(last_obj.group, None)

@@ -2,7 +2,7 @@
   <div class="list-group">
     <li class="list-group-item">
       Автор :
-      {% if not profile %}
+      {% if not show_author_url %}
         <a href="{% url 'posts:profile' post.author %}" class="list-group-item-action">
           {{ post.author.get_full_name }} 
         </a>

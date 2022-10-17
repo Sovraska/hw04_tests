@@ -1,12 +1,9 @@
 from http import HTTPStatus
 
-from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from django.test import Client, TestCase
+from django.urls import reverse
 
-from posts.models import Group, Post
-
-User = get_user_model()
+from posts.models import Group, Post, User
 
 
 class PostURLTests(TestCase):
@@ -16,21 +13,25 @@ class PostURLTests(TestCase):
         # Создаем неавторизованный клиент
         cls.guest_client = Client()
         # Создаем пользователя
+        cls.user_author = User.objects.create_user(username='HasNoName_author')
+
         cls.user = User.objects.create_user(username='HasNoName')
         # Создаем второй клиент
         cls.authorized_client = Client()
         # Авторизуем пользователя
+        cls.authorized_client.force_login(cls.user_author)
+
         cls.authorized_client.force_login(cls.user)
 
-        group = Group.objects.create(
+        cls.group = Group.objects.create(
             title='Тестовая Группа',
             slug='test-slug',
             description='тестовое описание группы'
         )
-        Post.objects.create(
+        cls.post = Post.objects.create(
             text='Тестовый текст',
             author=cls.user,
-            group=group,
+            group=cls.group,
         )
 
     def test_task_detail_url_exists_at_desired_location(self):
@@ -50,11 +51,11 @@ class PostURLTests(TestCase):
     def test_task_detail_url_exists_at_desired_location_authorized(self):
         """проверка доступности страниц авторизованному пользователю тоже."""
         url_names = [
-            '/',
-            '/group/test-slug/',
-            '/posts/1/',
-            '/profile/HasNoName/',
-            '/create/',
+            reverse('posts:index'),
+            reverse('posts:group_list', args=['test-slug']),
+            reverse('posts:profile', args=[self.user]),
+            reverse('posts:post_detail', args=[self.post.pk]),
+            reverse('posts:create_post'),
 
         ]
         for url in url_names:
@@ -65,26 +66,31 @@ class PostURLTests(TestCase):
     def test_home_url_exists_for_author(self):
         """проверка доступности страниц только автору."""
         url_names = [
-            '/posts/1/edit',
+            reverse('posts:post_edit', args=[self.post.pk]),
         ]
 
         for url in url_names:
             with self.subTest(url=url):
-                post_user = get_object_or_404(User, username='HasNoName')
-                if post_user == self.authorized_client:
-                    response = self.authorized_client.get(url)
+                response = self.authorized_client.get(url)
+
+                if self.user_author == self.authorized_client:
                     self.assertEqual(response.status_code, HTTPStatus.OK)
+                elif self.user == self.authorized_client:
+                    self.assertRedirects(response, url)
+                else:
+                    response = self.guest_client.get(url)
+                    self.assertRedirects(response, '/auth/login/?next=%2Fposts%2F1%2Fedit%2F')
 
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
         # Шаблоны по адресам
         templates_url_names = {
-            '/': 'posts/index.html',
-            '/group/test-slug/': 'posts/group_list.html',
-            '/profile/HasNoName/': 'posts/profile.html',
-            '/posts/1/': 'posts/post_detail.html',
-            '/posts/1/edit/': 'posts/create_post.html',
-            '/create/': 'posts/create_post.html',
+            reverse('posts:index'): 'posts/index.html',
+            reverse('posts:group_list', args=['test-slug']): 'posts/group_list.html',
+            reverse('posts:profile', args=[self.user]): 'posts/profile.html',
+            reverse('posts:post_detail', args=[self.post.pk]): 'posts/post_detail.html',
+            reverse('posts:post_edit', args=[self.post.pk]): 'posts/create_post.html',
+            reverse('posts:create_post'): 'posts/create_post.html',
         }
         for address, template in templates_url_names.items():
             with self.subTest(address=address):

@@ -9,7 +9,7 @@ from posts.models import Group, Post
 User = get_user_model()
 
 
-class TaskURLTests(TestCase):
+class PostURLTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

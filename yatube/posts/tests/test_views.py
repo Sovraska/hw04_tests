@@ -6,7 +6,7 @@ from django.urls import reverse
 from posts.models import Group, Post, User
 
 
-class TaskURLTests(TestCase):
+class PostViewTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -79,7 +79,9 @@ class PostURLTests(TestCase):
                     self.assertRedirects(response, url)
                 else:
                     response = self.guest_client.get(url)
-                    self.assertRedirects(response, '/auth/login/?next=%2Fposts%2F1%2Fedit%2F')
+                    self.assertRedirects(
+                        response, '/auth/login/?next=%2Fposts%2F1%2Fedit%2F'
+                    )
 
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""

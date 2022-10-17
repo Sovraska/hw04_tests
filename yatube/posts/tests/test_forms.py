@@ -24,7 +24,7 @@ class TaskCreateFormTests(TestCase):
         # Создаем неавторизованный клиент
         cls.guest_client = Client()
         # Создаем пользователя
-        cls.user = User.objects.create_user(username='HasNoName') 
+        cls.user = User.objects.create_user(username='HasNoName')
         # Создаем второй клиент
         cls.authorized_client = Client()
         # Авторизуем пользователя
@@ -33,7 +33,7 @@ class TaskCreateFormTests(TestCase):
         cls.group = Group.objects.create(
             title='Тестовая Группа',
             slug='test-slug',
-            description = 'тестовое описание группы'
+            description='тестовое описание группы'
         )
         cls.post = Post.objects.create(
             text='Тестовый текст',
@@ -47,12 +47,11 @@ class TaskCreateFormTests(TestCase):
     def tearDownClass(cls):
         super().tearDownClass()
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
-        
 
     def test_create_post(self):
         """Валидная форма create_post создает запись в Post."""
 
-        tasks_count = Post.objects.count()  
+        tasks_count = Post.objects.count()
 
         # Отправляем POST-запрос
         response = self.authorized_client.post(
@@ -60,11 +59,13 @@ class TaskCreateFormTests(TestCase):
             data={'text': 'Тестовый текст'},
         )
         # Проверяем, сработал ли редирект
-        self.assertRedirects(response, reverse('posts:profile', args=['HasNoName']))
+        self.assertRedirects(response, reverse(
+            'posts:profile', args=['HasNoName'])
+        )
 
         # Проверяем, увеличилось ли число постов
-        self.assertEqual(Post.objects.count(), tasks_count+1)
-        
+        self.assertEqual(Post.objects.count(), tasks_count + 1)
+
     def test_post_edit(self):
         """Валидная форма post_edit создает запись в Post."""
 
@@ -76,5 +77,4 @@ class TaskCreateFormTests(TestCase):
         # Проверяем, сработал ли редирект
         self.assertRedirects(response, reverse('posts:post_detail', args=[1]))
 
-        self.assertTrue(Post.objects.filter(text='Тестовый текст2',).exists()) 
-
+        self.assertTrue(Post.objects.filter(text='Тестовый текст2',).exists())

@@ -1,0 +1,27 @@
+<article>
+  <div class="list-group">
+    <li class="list-group-item">
+      Автор :
+      {% if not profile %}
+        <a href="{% url 'posts:profile' post.author %}" class="list-group-item-action">
+          {{ post.author.get_full_name }} 
+        </a>
+      {% endif %}
+      <br>
+      Дата публикации: {{ post.pub_date|date:"d E Y" }}
+      <br>
+      {% if index and post.group%}
+        Группа: <a href="{% url 'posts:group_list' post.group.slug %}" class="list-group-item-action">{{ post.group.title }}</a> 
+      {% endif %}
+      <hr>
+
+      {% autoescape on %}
+        <p>
+          {{ post.text|linebreaksbr|truncatechars:500 }}
+          <a href="{% url 'posts:post_detail' post.id %}" class="list-group-item-action">Читать далее </a> 
+        </p>
+      {% endautoescape %}
+
+    </li>
+  </div>
+</article>    

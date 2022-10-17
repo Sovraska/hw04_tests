@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+   {{ group.title }} 
+{% endblock %}
+
+{% block content %}
+  <h1>{{ group.title }}</h1>
+  <p>
+    {{ group.description }}
+  </p>
+  {% for post in page_obj %}
+    <hr>
+    {% include 'posts/includes/article.html' with index=false %}
+    <br>
+    {% empty %}
+      <p>Нет Постов</p>
+  {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
+{% endblock %}

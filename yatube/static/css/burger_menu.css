@@ -1,0 +1,16 @@
+
+.wrapper{
+	background-color: red;
+}
+
+.header {
+	position: fixed;
+	z-index: 50;
+	background-color: red;
+}
+
+.header:before{
+	content: '';
+	position: absolute;
+	background-color: red;
+}

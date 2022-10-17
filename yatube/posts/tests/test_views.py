@@ -24,6 +24,7 @@ class PostViewTests(TestCase):
             slug='test-slug',
             description='тестовое описание группы'
         )
+
         cls.post = Post.objects.create(
             text='Тестовый текст',
             author=cls.user,
@@ -67,8 +68,9 @@ class PostViewTests(TestCase):
 
     def test_index_pages_show_correct_context(self):
         """Шаблон index сформирован с правильным контекстом."""
-        response = self.authorized_client.get(reverse('posts:index'))
+
         for post in Post.objects.select_related("group"):
+            response = self.authorized_client.get(reverse('posts:index'))
             self.assertEqual(response.context.get('post'), post)
 
     def test_group_list_pages_show_correct_context(self):

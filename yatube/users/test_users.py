@@ -11,7 +11,7 @@ from posts.models import Group, Post
 User = get_user_model()
 
 
-class TaskURLTests(TestCase):
+class UsersTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

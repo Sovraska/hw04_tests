@@ -41,18 +41,18 @@ class PostViewTests(TestCase):
             ),
             (
                 'posts/group_list.html', reverse(
-                    'posts:group_list', kwargs={'slug': 'test-slug'}
+                    'posts:group_list', kwargs={'slug': self.group.slug}
                 )
             ),
             (
                 'posts/profile.html', reverse(
                     'posts:profile',
-                    args=[get_object_or_404(User, username='HasNoName')]
+                    args=[self.user]
                 )
             ),
             (
                 'posts/post_detail.html', reverse(
-                    'posts:post_detail', kwargs={'post_id': 1}
+                    'posts:post_detail', kwargs={'post_id': self.post.pk}
                 )
             ),
             (
@@ -84,10 +84,10 @@ class PostViewTests(TestCase):
     def test_group_list_pages_show_correct_context(self):
         """Шаблон group_list сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse(
-            'posts:group_list', kwargs={'slug': 'test-slug'})
+            'posts:group_list', kwargs={'slug': self.group.slug})
         )
 
-        group = get_object_or_404(Group, slug='test-slug')
+        group = get_object_or_404(Group, slug=self.group.slug)
         first_objects = group.posts.all()
         for post in first_objects:
             self.assertEqual(response.context.get('post'), post)
@@ -116,15 +116,14 @@ class PostViewTests(TestCase):
         """Шаблон post_detail сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse(
             'posts:post_detail',
-            kwargs={'post_id': 1})
+            kwargs={'post_id': self.post.pk})
         )
-        object = get_object_or_404(Post, id=self.post.pk)
-        self.assertEqual(response.context.get('post'), object)
+        self.assertEqual(response.context.get('post'), self.post)
 
     def test_post_edit_show_correct_context(self):
         """Шаблон post_edit сформирован с правильным контекстом."""
         response = (self.authorized_client.get(reverse(
-            'posts:post_edit', kwargs={'post_id': 1}))
+            'posts:post_edit', kwargs={'post_id': self.post.pk}))
         )
         form_fields = {
             'text': forms.fields.CharField,
@@ -163,7 +162,7 @@ class PostViewTests(TestCase):
         self.assertTrue(object.exists())
 
         response = self.authorized_client.get(reverse(
-            'posts:group_list', kwargs={'slug': 'test-slug'})
+            'posts:group_list', kwargs={'slug': self.group.slug})
         )
 
         object = self.group.posts.filter(
@@ -180,7 +179,7 @@ class PostViewTests(TestCase):
             self.assertEqual(response.context.get('post').group, post.group)
 
         response = self.authorized_client.get(reverse(
-            'posts:group_list', kwargs={'slug': 'test-slug'})
+            'posts:group_list', kwargs={'slug': self.group.slug})
         )
 
         object = self.group.posts.all()

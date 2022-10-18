@@ -28,7 +28,7 @@
                 {% endif %}    
             </div>
             <div class="card-body ">        
-                <form method="post" action="{% url 'posts:create_post' %}">
+                <form method="post" action="">
                     {% csrf_token %}      
                     <div class="form-group row my-3 p-3">
                         <label for="id_text">

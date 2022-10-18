@@ -97,3 +97,4 @@ def post_edit(request, post_id):
         return redirect("posts:post_detail", post.id)
 
     return render(request, template, {'form': form, 'is_edit': True})
+

@@ -37,10 +37,10 @@ class PostURLTests(TestCase):
     def test_task_detail_url_exists_at_desired_location(self):
         """проверка доступности страниц любому пользователю."""
         url_names = [
-            '/',
-            '/group/test-slug/',
-            '/profile/HasNoName/',
-            '/posts/1/',
+            reverse('posts:index'),
+            reverse('posts:group_list', args=['test-slug']),
+            reverse('posts:profile', args=[self.user]),
+            reverse('posts:post_detail', args=[self.post.pk]),
         ]
 
         for url in url_names:
@@ -80,7 +80,10 @@ class PostURLTests(TestCase):
                 else:
                     response = self.guest_client.get(url)
                     self.assertRedirects(
-                        response, '/auth/login/?next=%2Fposts%2F1%2Fedit%2F'
+                        response, reverse(
+                            'users:login'
+                        ) + "?next=" + reverse(
+                            'posts:post_edit', args=[self.post.pk])
                     )
 
     def test_urls_uses_correct_template(self):

@@ -13,14 +13,11 @@ class PostURLTests(TestCase):
         # Создаем неавторизованный клиент
         cls.guest_client = Client()
         # Создаем пользователя
-        cls.user_author = User.objects.create_user(username='HasNoName_author')
-
         cls.user = User.objects.create_user(username='HasNoName')
         # Создаем второй клиент
         cls.authorized_client = Client()
         # Авторизуем пользователя
-        cls.authorized_client.force_login(cls.user_author)
-
+        
         cls.authorized_client.force_login(cls.user)
 
         cls.group = Group.objects.create(
@@ -73,10 +70,12 @@ class PostURLTests(TestCase):
             with self.subTest(url=url):
                 response = self.authorized_client.get(url)
 
-                if self.user_author == self.authorized_client:
+                if self.post.author == self.authorized_client:
                     self.assertEqual(response.status_code, HTTPStatus.OK)
+
                 elif self.user == self.authorized_client:
                     self.assertRedirects(response, url)
+
                 else:
                     response = self.guest_client.get(url)
                     self.assertRedirects(

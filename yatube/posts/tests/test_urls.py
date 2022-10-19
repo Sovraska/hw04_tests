@@ -17,7 +17,7 @@ class PostURLTests(TestCase):
         # Создаем второй клиент
         cls.authorized_client = Client()
         # Авторизуем пользователя
-        
+
         cls.authorized_client.force_login(cls.user)
 
         cls.group = Group.objects.create(

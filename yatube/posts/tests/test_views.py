@@ -9,7 +9,6 @@ from posts.models import Group, Post, User
 class PostViewTests(TestCase):
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
         # Создаем неавторизованный клиент
         cls.guest_client = Client()
         # Создаем пользователя

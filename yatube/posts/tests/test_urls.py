@@ -93,13 +93,13 @@ class PostURLTests(TestCase):
         templates_url_names = {
             reverse('posts:index'): 'posts/index.html',
             reverse('posts:group_list', args=['test-slug']):
-            'posts/group_list.html',
+                'posts/group_list.html',
             reverse('posts:profile', args=[self.user]):
-            'posts/profile.html',
+                'posts/profile.html',
             reverse('posts:post_detail', args=[self.post.pk]):
-            'posts/post_detail.html',
+                'posts/post_detail.html',
             reverse('posts:post_edit', args=[self.post.pk]):
-            'posts/create_post.html',
+                'posts/create_post.html',
             reverse('posts:create_post'): 'posts/create_post.html',
         }
         for address, template in templates_url_names.items():

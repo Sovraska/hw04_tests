@@ -213,28 +213,45 @@ class PaginatorViewsTest(TestCase):
 
     def test_first_page_contains(self):
         """Тест Пагинатора для Первой странцы"""
-        response = self.client.get(reverse('posts:index'))
         PAGE_LIMIT = 10
         url_names = {
-            'posts/index.html': PAGE_LIMIT,
-            'posts/group_list.html': PAGE_LIMIT,
-            'posts/profile.html': PAGE_LIMIT,
+            reverse('posts:index'): PAGE_LIMIT,
+            reverse(
+                'posts:group_list',
+                kwargs={'slug': self.group.slug}
+            ): PAGE_LIMIT,
+            reverse(
+                'posts:profile',
+                args=[self.user]
+            ): PAGE_LIMIT,
         }
 
         for value, expected in url_names.items():
             with self.subTest(value=value):
+                response = self.client.get(value + '?page=1')
                 self.assertEqual(len(response.context['page_obj']), expected)
 
     def test_second_page_contains_three_records(self):
         """Тест Пагинатора для Второй странцы"""
         PAGE_LIMIT_SECOND_PAGE = 3
-        response = self.client.get(reverse('posts:index') + '?page=2')
+
         url_names = {
-            'posts/index.html': PAGE_LIMIT_SECOND_PAGE,
-            'posts/group_list.html': PAGE_LIMIT_SECOND_PAGE,
-            'posts/profile.html': PAGE_LIMIT_SECOND_PAGE,
+            reverse(
+                'posts:index'
+            ): PAGE_LIMIT_SECOND_PAGE,
+
+            reverse(
+                'posts:group_list',
+                kwargs={'slug': self.group.slug}
+            ): PAGE_LIMIT_SECOND_PAGE,
+
+            reverse(
+                'posts:profile',
+                args=[self.user]
+            ): PAGE_LIMIT_SECOND_PAGE,
         }
 
         for value, expected in url_names.items():
             with self.subTest(value=value):
+                response = self.client.get(value + '?page=2')
                 self.assertEqual(len(response.context['page_obj']), expected)

@@ -19,6 +19,7 @@ class Group(models.Model):
 
 class Post(models.Model):
     text = models.TextField(
+        max_length=200,
         verbose_name='Текст',
         help_text='Введите текст поста',
     )

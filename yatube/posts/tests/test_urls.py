@@ -31,7 +31,7 @@ class PostURLTests(TestCase):
             group=cls.group,
         )
 
-    def test_task_detail_url_exists_at_desired_location(self):
+    def test_url_exists_at_desired_location(self):
         """проверка доступности страниц любому пользователю."""
         url_names = [
             reverse('posts:index'),
@@ -44,8 +44,10 @@ class PostURLTests(TestCase):
             with self.subTest(url=url):
                 response = self.guest_client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
+        response = self.guest_client.get('/unexisting_page/')
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
-    def test_task_detail_url_exists_at_desired_location_authorized(self):
+    def test_url_exists_at_desired_location_authorized(self):
         """проверка доступности страниц авторизованному пользователю тоже."""
         url_names = [
             reverse('posts:index'),

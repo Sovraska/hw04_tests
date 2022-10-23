@@ -35,7 +35,12 @@
           <a href="{% url 'posts:post_edit' post.id  %}" class="list-group-item-action">
             Изменить пост 
           </a>
-        </li> 
+        </li>
+        <li class="list-group-item">
+          <a href="{% url 'posts:post_delete' post.id  %}" class="list-group-item-action">
+            [Удалить пост]
+          </a>
+        </li>
       {% endif %}
     </ul>
   </aside>     

@@ -2,7 +2,6 @@ from http import HTTPStatus
 
 from django import forms
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from django.test import Client, TestCase
 from django.urls import reverse
 
@@ -10,8 +9,7 @@ from posts.models import Group, Post
 
 User = get_user_model()
 
-
-class UsersTests(TestCase):
+class UsersURLTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -60,7 +58,7 @@ class UsersTests(TestCase):
 
         for url in url_names:
             with self.subTest(url=url):
-                post_user = get_object_or_404(User, username='HasNoName')
+                post_user = self.user
                 if post_user == self.authorized_client:
                     response = self.authorized_client.get(url)
                     self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -104,7 +102,7 @@ class UsersTests(TestCase):
         }
         for template, address in templates_url_names.items():
             with self.subTest(address=address):
-                post_user = get_object_or_404(User, username='HasNoName')
+                post_user = self.user
                 if post_user == self.authorized_client:
                     response = self.authorized_client.get(address)
                     self.assertTemplateUsed(response, template)

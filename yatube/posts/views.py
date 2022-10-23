@@ -97,3 +97,17 @@ def post_edit(request, post_id):
         return redirect("posts:post_detail", post.id)
 
     return render(request, template, {'form': form, 'is_edit': True})
+
+
+@login_required
+def post_delete(request, post_id):
+    template = 'posts/post_delete.html'
+    posts = Post.objects.select_related('group')
+    post = get_object_or_404(posts, id=post_id)
+    if post.author != request.user:
+        return redirect('posts:index')
+
+    post.delete()
+    return render(request, template)
+
+

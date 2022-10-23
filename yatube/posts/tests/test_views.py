@@ -9,6 +9,7 @@ from posts.models import Group, Post, User
 class PostViewTests(TestCase):
     @classmethod
     def setUpClass(cls):
+        super().setUpClass()
         # Создаем неавторизованный клиент
         cls.guest_client = Client()
         # Создаем пользователя
@@ -99,10 +100,10 @@ class PostViewTests(TestCase):
         """Шаблон profile сформирован с правильным контекстом."""
         response = self.authorized_client.get(reverse(
             'posts:profile',
-            args=[get_object_or_404(User, username='HasNoName')])
+            args=[self.user])
         )
 
-        author = get_object_or_404(User, username='HasNoName')
+        author = self.user
         first_objects = author.posts.all()
         for post in first_objects:
             self.assertEqual(response.context.get('post'), post)

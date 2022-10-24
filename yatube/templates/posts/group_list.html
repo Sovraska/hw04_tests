@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-   {{ group.title }} 
+    Посты для Группы: {{ group.title }}
 {% endblock %}
 
 {% block content %}
@@ -10,10 +10,12 @@
   </p>
   {% for post in page_obj %}
     <hr>
-    {% include 'posts/includes/article.html' with index=false %}
+    {% include 'posts/includes/article.html' %}
     <br>
     {% empty %}
       <p>Нет Постов</p>
   {% endfor %}
   {% include 'posts/includes/paginator.html' %}
 {% endblock %}
+
+

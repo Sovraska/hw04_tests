@@ -147,3 +147,5 @@ dmypy.json
 
 
 .isort.cfg
+
+.static

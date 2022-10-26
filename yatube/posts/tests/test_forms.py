@@ -2,6 +2,7 @@ import shutil
 import tempfile
 
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
@@ -76,7 +77,7 @@ class PostCreateFormTests(TestCase):
         tasks_count = Post.objects.count()
         # Отправляем POST-запрос
         response = self.authorized_client.post(
-            reverse('posts:post_edit', args=[1]),
+            reverse('posts:post_edit', args=[self.post.pk]),
             data={
                 'text': 'Тестовый текст2',
             }
@@ -84,9 +85,9 @@ class PostCreateFormTests(TestCase):
 
         self.assertEqual(Post.objects.count(), tasks_count)
         # Проверяем, сработал ли редирект
-        self.assertRedirects(response, reverse('posts:post_detail', args=[1]))
+        self.assertRedirects(response, reverse('posts:post_detail', args=[self.post.pk]))
 
-        last_obj = Post.objects.all().last()
+        last_obj = get_object_or_404(Post, pk=self.post.pk)
         self.assertEqual(last_obj.text, 'Тестовый текст2')
         self.assertEqual(last_obj.author, self.user)
         self.assertEqual(last_obj.group, None)

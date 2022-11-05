@@ -4,7 +4,7 @@
     Yatube
 {% endblock %}
 {% block content %}
-  <h1>Это главная страница проекта Yatube</h1>
+  <h1>Ваши Подписки</h1>
     <hr>
     {% include 'posts/includes/switcher.html' %}
     {% for post in page_obj %}
@@ -12,7 +12,7 @@
       {% include 'posts/includes/article.html' with show_group=True %}
       <br>
     {% empty %}
-      <p>Нет Постов</p>
+      <p>Вы не подписаны на авторов</p>
     {% endfor %}
   {% include 'posts/includes/paginator.html' %}
 {% endblock %}

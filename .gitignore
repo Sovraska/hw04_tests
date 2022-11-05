@@ -149,3 +149,5 @@ dmypy.json
 .isort.cfg
 
 yatube/static
+
+yatube/static/media

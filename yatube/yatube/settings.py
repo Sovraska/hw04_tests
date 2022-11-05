@@ -37,8 +37,9 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'posts.apps.PostsConfig',
     'users.apps.UsersConfig',
-    'core.apps.CoreConfig',
     'about.apps.AboutConfig',
+    'core.apps.CoreConfig',
+    'sorl.thumbnail',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -135,3 +136,15 @@ LOGIN_REDIRECT_URL = 'posts:index'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
